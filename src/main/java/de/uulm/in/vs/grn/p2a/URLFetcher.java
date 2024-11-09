@@ -56,15 +56,13 @@ public class URLFetcher{
         System.out.println(contentLen + " " + contentType);
 
 
-        /* Der grund warum ich hier den Filename und den filetype seperat anschaue liegt daran das für den fall das der Path der website kein .html endung hat
-        *  Was die Norm ist der Code sonst massivst brechen würde und die datei ohne eine endung speichern
-        *  Ansich wäre das oke weil für unseren zweck das ausreicht aber das ist besser isch
-        */
-        //Ja das ist cursed aber ich will es einfach funktionierend haben und um das schön zu machen muss ich viel umschreiben bzw dinge wieder verwenden
-        String fileName = url.getPath().split("/")[url.getPath().split("/").length-1].split("\\.")[0];
+
+        //Ja das ist cursed aber es gibt mir den fileName als array wo index 0 der name und index 1 den type gibt falls es existiert
+        String[] fileName = url.getPath().split("/")[url.getPath().split("/").length-1].split("\\.");
+
 
         byte[] fileData = in.readNBytes(contentLen);
-        Path file = Paths.get(fileName + "." + contentType);
+        Path file = Paths.get(fileName[0] + "." + ((fileName[1] != null) ? fileName[1]: contentType));//nutzt die fileendung der URl falls sie existiert sonst die aus dem HTTP response
         System.out.println(file.toAbsolutePath());
         Files.write(file,fileData);
 
